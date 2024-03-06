@@ -5,7 +5,6 @@ const express = require('express')
 // 创建 express 的服务器实例
 const app = express()
 
-
 //导入joi进行规则校验
 const joi = require('@hapi/joi')
 // 导入 cors 中间件
@@ -17,22 +16,23 @@ app.use(express.urlencoded({ extended: false }))
 
 //封装res.cc函数
 app.use((req, res, next) => {
-    res.cc = function (err, status = 1) {
+    res.cc = function (err, status = 1, results) {
         res.send({
             status,
             message: err instanceof Error ? err.message : err,
+            results
         })
     }
     next()
 })
 
-// 导入并使用用户路由模块
-const userRouter = require('@/router/user.router')
-app.use('/api', userRouter)
+// 登录获取用户信息
+const userRouter = require('@/router/login.router')
+app.use('/login', userRouter)
 
-app.get('', (req, res) => {
-    res.send('1')
-})
+// 用户管理
+const getallusemsg = require("@/router/user.router")
+app.use('/system', getallusemsg)
 
 //错误中间件
 app.use(function (err, req, res, next) {

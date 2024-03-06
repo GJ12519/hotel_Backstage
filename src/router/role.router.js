@@ -4,12 +4,13 @@ const express = require('express')
 const router = express.Router()
 
 // 导入用户路由处理函数的模块
-const getuser = require("@/router-handle/user.router")
+const getRoleMessage = require('@/router-handle/role.router')
 
 //导入验证表单数据的中间件
-// const expressJoi = require('@escook/express-joi')
+const expressJoi = require('@escook/express-joi')
 
-router.get('/useradmin', getuser.getallusermsg)
+// 获取菜单信息接口
+router.get('/getrole', getRoleMessage.getrolemsg)
 
 // // 向外共享路由对象
 module.exports = router
