@@ -34,6 +34,10 @@ app.use('/login', userRouter)
 const getallusemsg = require("@/router/user.router")
 app.use('/system', getallusemsg)
 
+// 客户管理
+const gusadminRouter = require('@/router/gusadmin.router')
+app.use('/guester', gusadminRouter)
+
 //错误中间件
 app.use(function (err, req, res, next) {
     //数据验证失败

@@ -14,11 +14,11 @@ const config = require("../../config")
 exports.regUser = async (req, res) => {
     const EmployeeID = await generateUniqueRandomNumber(16)
     console.log(EmployeeID);
-    let { password, username, gender, birthday, phone, address, idcard, } = req.body
+    let { password, username, gender, birthday, phone, address, idcard, name } = req.body
     password = bcryptjs.hashSync(password, 10)
-
-    const sql = 'insert into employee (EmployeeID,Password,EmployeeName,Gender,Phone,Address,IDCard,Status) values (?,?,?,?,?,?,?,?)'
-    db.query(sql, [EmployeeID, password, username, gender, phone, address, idcard, Status = 1], (err, results) => {
+ 
+    const sql = 'insert into employee (EmployeeID,name,Password,EmployeeName,Gender,Phone,Address,IDCard,conditions) values (?,?,?,?,?,?,?,?,?)'
+    db.query(sql, [EmployeeID, name, password, username, gender, phone, address, idcard, conditions = 1], (err, results) => {
         // 执行sql语句失败
         if (err) {
             return res.send(err)
