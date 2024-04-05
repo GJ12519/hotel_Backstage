@@ -65,9 +65,9 @@ exports.reserve = async (req, res) => {
             let password = bcryptjs.hashSync("123456", 10)
 
             /* 空用户进行注册 */
-            const sql2 = 'insert into users (Gus_id,Gus_name,IDCard,Gus_password,conditions,note) values (?,?,?,?,?,?)'
+            const sql2 = 'insert into users (Gus_id,Gus_name,IDCard,Gus_password,Phone,conditions,note) values (?,?,?,?,?,?)'
             await new Promise((resolve, reject) => {
-                db.query(sql2, [ID, name, IDCard, password, 1, note], (err, results) => {
+                db.query(sql2, [ID, name, IDCard, password, phone, 1, note], (err, results) => {
                     if (err) {
                         return res.send(err)
                     }
@@ -118,6 +118,79 @@ exports.reserve = async (req, res) => {
 }
 
 // 入住
-exports.checkin = (req, res) => {
+exports.checkin = async (req, res) => {
+    const data = req.body
+    const { IDCard, name, conditions, etime, stime, phone, room } = data
+    console.log(data, stime, etime);
+    try {
+        // 查询该客户，如果不存在，则添加，存在则返回信息
+        const IDD = await new Promise((resolve, reject) => {
+            const sql1 = 'select Gus_id from users where IDCard = ?'
+            db.query(sql1, IDCard, (err, results) => {
+                if (err) {
+                    return res.send(err)
+                }
+                resolve(results)
+            })
+        })
 
+        console.log('获取到的id', IDD);
+        // 空表示无此人，则进行注册
+        if (IDD.length === 0) {
+            console.log('22');
+            const ID = await generateUniqueRandomNumber(16)
+            const note = "系统注册"
+            let password = bcryptjs.hashSync("123456", 10)
+
+            /* 空用户进行注册 */
+            const sql2 = 'insert into users (Gus_id,Gus_name,IDCard,Gus_password,Phone,conditions,note) values (?,?,?,?,?,?)'
+            await new Promise((resolve, reject) => {
+                db.query(sql2, [ID, name, IDCard, password, phone, 1, note], (err, results) => {
+                    if (err) {
+                        return res.send(err)
+                    }
+                    console.log('进行注册', results);
+                    resolve(results)
+
+                })
+            })
+            /* 注册完成直接进行预定 */
+            const sql3 = 'update room set isable = ?,userID = ?,stime=?,etime=? where room_id = ?'
+            db.query(sql3, [2, ID, stime, etime, room], (err, results) => {
+                if (err) {
+                    return res.send(err)
+                }
+                console.log('直接进行入住');
+                return res.cc('入住成功', 200, results)
+            })
+        }
+        // 确认入住
+        else if (conditions == 1) {
+            console.log('2233', IDD[0].Gus_id);
+            const IDD1 = IDD[0].Gus_id
+            const sql4 = 'update room set isable = ?,userID = ?,stime=?,etime=? where room_id = ?'
+            db.query(sql4, [2, IDD1, stime, etime, room], (err, results) => {
+                if (err) {
+                    return res.send(err)
+                }
+                console.log('入住成功');
+                return res.cc('入住成功', 200, results)
+            })
+            console.log('2');
+        }
+        // 退房
+        else if (conditions == -1) {
+            const sql5 = 'update room set isable = ?,userID = ?,stime=?,etime=? where room_id = ?'
+            db.query(sql5, [0, null, stime, etime, room], (err, results) => {
+                if (err) {
+                    return res.send(err)
+                }
+                console.log('退房');
+                return res.cc('退房', 200, results)
+            })
+            console.log('2');
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
