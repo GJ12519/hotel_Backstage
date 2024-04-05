@@ -38,6 +38,10 @@ app.use('/system', getallusemsg)
 const gusadminRouter = require('@/router/gusadmin.router')
 app.use('/guester', gusadminRouter)
 
+// 客房管理
+const getroom = require('@/router/room.router')
+app.use('/roomadmin', getroom)
+
 //错误中间件
 app.use(function (err, req, res, next) {
     //数据验证失败
