@@ -12,7 +12,9 @@ const cors = require('cors')
 // 将 cors 注册为全局中间件
 app.use(cors())
 //解析配置表单数据的中间件，注意:这个中间件只能解析application/x-www-form-urlencoded格式的表单数据
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
+// 解析 JSON 格式请求体的中间件  
+app.use(express.json())
 
 //封装res.cc函数
 app.use((req, res, next) => {
@@ -41,6 +43,16 @@ app.use('/guester', gusadminRouter)
 // 客房管理
 const getroom = require('@/router/room.router')
 app.use('/roomadmin', getroom)
+
+// 订单管理
+const getorder = require('@/router/order.router')
+app.use('/orderadmin', getorder)
+
+
+// 前台获取客房数据
+const getgusroom = require('@/router/gus_room.router')
+app.use('/frontadmin', getgusroom)
+
 
 //错误中间件
 app.use(function (err, req, res, next) {

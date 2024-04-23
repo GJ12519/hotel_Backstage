@@ -3,7 +3,7 @@ const db = require('../../db/index')
 //导入bcryptjs
 const bcryptjs = require('bcryptjs')
 // 导入生成随机id
-const generateUniqueRandomNumber = require('@/util/index')
+const {generateUniqueRandomNumber} = require('@/util/index')
 // 导入jwt生成token
 const jwt = require('jsonwebtoken')
 // 导入密钥
@@ -31,10 +31,6 @@ exports.getgusmsg = async (req, res) => {
                         console.log(err);
                         return res.send(err)
                     }
-                    results.map((item) => {
-                        item.Gus_password = bcryptjs.compareSync(userinfo.password, results[0].Password)
-
-                    })
                     resolve(results)
                 })
             })

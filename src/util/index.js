@@ -17,4 +17,13 @@ function generateUniqueRandomNumber(length = 8) {
     }
 }
 
-module.exports = generateUniqueRandomNumber
+// 正则函数，判断字段是否全由数字组成
+function isNumberOnly(input) {
+    const regex = /^\d+$/;
+    return regex.test(input);
+}
+
+module.exports = {
+    generateUniqueRandomNumber,
+    isNumberOnly
+}
