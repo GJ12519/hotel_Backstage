@@ -36,6 +36,10 @@ app.use('/login', userRouter)
 const getallusemsg = require("@/router/user.router")
 app.use('/system', getallusemsg)
 
+// 角色管理
+const getrolemsg = require("@/router/role.router")
+app.use('/systems', getrolemsg)
+
 // 客户管理
 const gusadminRouter = require('@/router/gusadmin.router')
 app.use('/guester', gusadminRouter)

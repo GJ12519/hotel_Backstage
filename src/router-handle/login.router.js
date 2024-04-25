@@ -3,7 +3,7 @@ const db = require('../../db/index')
 //导入bcryptjs
 const bcryptjs = require('bcryptjs')
 // 导入生成随机id
-const generateUniqueRandomNumber = require('@/util/index')
+const {generateUniqueRandomNumber} = require('@/util/index')
 // 导入jwt生成token
 const jwt = require('jsonwebtoken')
 // 导入密钥
