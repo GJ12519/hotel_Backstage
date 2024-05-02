@@ -8,14 +8,17 @@ const userHandler = require('@/router-handle/login.router')
 
 //导入验证表单数据的中间件
 const expressJoi = require('@escook/express-joi')
+
 //导入需要的验证规则对象
 const { reg_login_verify, reg_userid_verify, reg_roleid_verify } = require('@/verify/user.verify')
+// token登录校验
+const { verifyAuth } = require('@/authmiddleware')
 
 // 注册接口
 router.post('/reguser', userHandler.regUser)
 
 // 登录接口
-router.post('/getuser', expressJoi(reg_login_verify), userHandler.login)
+router.post('/getuser', verifyAuth, expressJoi(reg_login_verify), userHandler.login)
 
 // 获取角色信息
 router.post('/getrole', userHandler.getrolemsg)

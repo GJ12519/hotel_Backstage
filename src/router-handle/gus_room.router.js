@@ -3,7 +3,7 @@ const db = require('../../db/index')
 //导入bcryptjs
 const bcryptjs = require('bcryptjs')
 // 导入生成随机id
-const generateUniqueRandomNumber = require('@/util/index')
+const { generateUniqueRandomNumber } = require('@/util/index')
 // 导入jwt生成token
 const jwt = require('jsonwebtoken')
 // 导入密钥
@@ -45,16 +45,16 @@ exports.roomlogin = (req, res) => {
     const userinfo = req.body
     console.log(userinfo);
     // 定义sql语句
-    const sql = 'select * from users where Gus_name = ?'
+    const sql = 'select * from users where Gus_name = ? and conditions = ?'
 
-    db.query(sql, userinfo.name, (err, results) => {
+    db.query(sql, [userinfo.name, 1], (err, results) => {
         // 执行sql语句失败
         if (err) {
             return res.send(err)
         }
         if (results.length != 1) {
-            console.log('账号错误，请重新输入');
-            return res.cc('账号错误，请重新输入', status = 401)
+            console.log('账号错误或存在问题，请重新输入');
+            return res.cc('账号错误或存在问题，请重新输入', status = 401)
         }
         //判断密码是否正确
         const compareResult = bcryptjs.compareSync(userinfo.password, results[0].Gus_password)
@@ -92,7 +92,7 @@ exports.roomreserve = async (req, res) => {
             }
             if (results.length === 0) {
                 console.log('无该类型的客房');
-                return res.cc('请更换其他类型的客房', 202)
+                return res.cc('无该类型的客服，请更换其他类型的客房', 202)
             } else {
                 room = results[0]?.room_id
             }
@@ -100,6 +100,8 @@ exports.roomreserve = async (req, res) => {
             resolve(room)
         })
     })
+
+    console.log(roomId);
 
     // 进行预订
     await new Promise((resolve, reject) => {
